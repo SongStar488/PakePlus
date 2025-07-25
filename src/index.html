@@ -1,22 +1,151 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <link rel="stylesheet" href="styles.css" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>PakePlus App</title>
-        <script type="module" src="/main.js" defer></script>
-    </head>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>番茄钟工具</title>
+    <!-- 引入Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入Font Awesome图标 -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- 配置Tailwind自定义颜色 -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6', // 蓝色作为主色调
+                        secondary: '#10B981', // 绿色作为辅助色
+                        accent: '#F59E0B', // 橙色作为强调色
+                        dark: '#1E293B',
+                        light: '#F8FAFC'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <!-- 自定义工具类 -->
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .timer-shadow {
+                box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+            }
+            .btn-hover {
+                @apply transition-all duration-300 hover:scale-105 hover:shadow-lg;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gradient-to-br from-light to-gray-100 dark:from-dark dark:to-gray-900 min-h-screen transition-colors duration-300">
+    <div class="container mx-auto px-4 py-8 max-w-2xl">
+        <!-- 应用标题 -->
+        <header class="text-center mb-8">
+            <h1 class="text-[clamp(2rem,5vw,3rem)] font-bold text-primary dark:text-white mb-2">番茄钟工具</h1>
+            <p class="text-gray-600 dark:text-gray-300">提高工作效率的时间管理助手</p>
+        </header>
 
-    <body>
-        <main class="container">
-            <h1>Welcome to PakePlus</h1>
+        <!-- 主题切换按钮 -->
+        <div class="flex justify-end mb-6">
+            <button id="theme-toggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 btn-hover">
+                <i class="fa fa-moon-o dark:hidden"></i>
+                <i class="fa fa-sun-o hidden dark:inline"></i>
+            </button>
+        </div>
 
-            <form class="row" id="greet-form">
-                <input id="greet-input" placeholder="Enter a name..." />
-                <button type="submit">Greet</button>
-            </form>
-            <p id="greet-msg"></p>
-        </main>
-    </body>
+        <!-- 计时器显示区域 -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 mb-8 shadow-xl transition-all duration-300 transform hover:shadow-2xl">
+            <div class="flex justify-center mb-4">
+                <div id="timer-label" class="text-xl font-semibold text-gray-700 dark:text-gray-300">工作时间</div>
+            </div>
+            <div class="flex justify-center">
+                <div id="time-left" class="text-[clamp(3rem,10vw,5rem)] font-mono font-bold text-primary dark:text-white timer-shadow rounded-lg p-4 min-w-[200px] text-center">25:00</div>
+            </div>
+        </div>
+
+        <!-- 控制按钮区域 -->
+        <div class="flex justify-center gap-4 mb-8 flex-wrap">
+            <button id="start_stop" class="bg-secondary hover:bg-secondary/90 text-white rounded-full w-16 h-16 flex items-center justify-center text-2xl btn-hover">
+                <i class="fa fa-play"></i>
+            </button>
+            <button id="reset" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-full w-16 h-16 flex items-center justify-center text-2xl btn-hover">
+                <i class="fa fa-refresh"></i>
+            </button>
+            <button id="session-decrement" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-full w-12 h-12 flex items-center justify-center text-xl btn-hover">
+                <i class="fa fa-minus"></i>
+            </button>
+            <button id="session-increment" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-full w-12 h-12 flex items-center justify-center text-xl btn-hover">
+                <i class="fa fa-plus"></i>
+            </button>
+        </div>
+
+        <!-- 会话设置区域 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
+                <h2 class="text-center text-lg font-semibold text-gray-700 dark:text-gray-300 mb-4">工作时长</h2>
+                <div class="flex items-center justify-center gap-4">
+                    <button id="work-decrement" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-full w-10 h-10 flex items-center justify-center btn-hover">
+                        <i class="fa fa-minus"></i>
+                    </button>
+                    <span id="work-length" class="text-2xl font-bold text-primary dark:text-white">25</span>
+                    <span class="text-gray-500 dark:text-gray-400">分钟</span>
+                    <button id="work-increment" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-full w-10 h-10 flex items-center justify-center btn-hover">
+                        <i class="fa fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
+                <h2 class="text-center text-lg font-semibold text-gray-700 dark:text-gray-300 mb-4">休息时长</h2>
+                <div class="flex items-center justify-center gap-4">
+                    <button id="break-decrement" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-full w-10 h-10 flex items-center justify-center btn-hover">
+                        <i class="fa fa-minus"></i>
+                    </button>
+                    <span id="break-length" class="text-2xl font-bold text-primary dark:text-white">5</span>
+                    <span class="text-gray-500 dark:text-gray-400">分钟</span>
+                    <button id="break-increment" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-full w-10 h-10 flex items-center justify-center btn-hover">
+                        <i class="fa fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 任务列表区域 -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg mb-8">
+            <h2 class="text-center text-lg font-semibold text-gray-700 dark:text-gray-300 mb-4">任务列表</h2>
+            <div class="flex mb-4">
+                <input type="text" id="task-input" placeholder="添加新任务..." class="flex-1 px-4 py-2 rounded-l-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary">
+                <button id="add-task" class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-r-lg btn-hover">
+                    <i class="fa fa-plus"></i>
+                </button>
+            </div>
+            <ul id="task-list" class="space-y-2 max-h-40 overflow-y-auto pr-2">
+                <!-- 任务项将通过JavaScript动态添加 -->
+                <li class="text-gray-500 dark:text-gray-400 italic text-center">暂无任务，添加你的第一个任务吧！</li>
+            </ul>
+        </div>
+
+        <!-- 完成的番茄数统计 -->
+        <div class="text-center mb-8">
+            <p class="text-gray-600 dark:text-gray-300 mb-2">已完成番茄数</p>
+            <div id="pomodoro-count" class="flex justify-center gap-1">
+                <!-- 番茄图标将通过JavaScript动态添加 -->
+            </div>
+        </div>
+
+        <!-- 页脚 -->
+        <footer class="text-center text-gray-500 dark:text-gray-400 text-sm mt-12">
+            <p>© 2023 番茄钟工具 | 专注于提高你的工作效率</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
 </html>
