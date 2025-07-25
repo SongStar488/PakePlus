@@ -1,0 +1,158 @@
+/* 任务项样式 */
+.task-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    background-color: #f5f5f5;
+    transition: all 0.3s ease;
+}
+
+.task-item.dark {
+    background-color: #1f2937;
+}
+
+/* 深色模式优化 - 高对比度清晰配色方案 */
+.dark { background-color: #121212; }
+.dark .bg-white { background-color: #1e1e1e !important; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3) !important; }
+.dark .text-gray-700, .dark .text-gray-600, .dark .text-white { color: #ffffff !important; }
+.dark .text-gray-500 { color: #e0e0e0 !important; }
+.dark .border-gray-300 { border-color: #444444 !important; }
+.dark .bg-gray-200, .dark .task-item.dark { background-color: #2a2a2a !important; }
+.dark .hover:bg-gray-300:hover { background-color: #3a3a3a !important; }
+.dark #time-left { color: #81c7fc !important; }
+.dark .timer-warning { color: #ff9800 !important; }
+.dark .task-completed .task-text { color: #b0b0b0 !important; }
+.dark #task-input { background-color: #2a2a2a !important; border-color: #444444 !important; color: #ffffff !important; }
+.dark .task-delete { color: #ef5350; }
+.dark .accent-primary { accent-color: #81c7fc; }
+.dark .timer-shadow { box-shadow: 0 0 15px rgba(129, 199, 252, 0.15); }
+
+.task-item:hover {
+    background-color: #e9e9e9;
+    transform: translateX(4px);
+}
+
+.task-item.dark:hover {
+    background-color: #4B5563;
+}
+
+.task-text {
+    flex: 1;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.task-completed .task-text {
+    text-decoration: line-through;
+    color: #6B7280;
+    opacity: 0.7;
+}
+
+.task-actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem;
+    margin-left: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.task-delete {
+    color: #EF4444;
+    opacity: 0.6;
+}
+
+.task-delete:hover {
+    opacity: 1;
+    transform: scale(1.2);
+}
+
+/* 自定义滚动条 */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.dark ::-webkit-scrollbar-track {
+    background: #1F2937;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #bbb;
+    border-radius: 3px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+    background: #4B5563;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #999;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+    background: #6B7280;
+}
+
+/* 动画效果 */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.task-item {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* 按钮点击效果 */
+.btn-click:active {
+    transform: scale(0.95);
+}
+
+/* 计时器警告样式 */
+.timer-warning {
+    color: #EF4444 !important;
+    animation: pulse 1s infinite;
+}
+
+/* 任务输入框焦点样式 */
+#task-input:focus {
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+
+/* 响应式调整 */
+@media (max-width: 640px) {
+    .container {
+        padding: 0.5rem;
+    }
+
+    #time-left {
+        font-size: 3rem !important;
+        padding: 0.5rem !important;
+    }
+
+    .task-item {
+        padding: 0.5rem;
+    }
+}
+
+/* 平滑过渡 */
+* {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
